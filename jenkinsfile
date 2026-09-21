@@ -3,6 +3,14 @@ pipeline {
 
     stages {
 
+        stage('Checkout Verification') {
+            steps {
+                echo 'Checking Jenkins workspace...'
+                sh 'pwd'
+                sh 'ls -la'
+            }
+        }
+
         stage('Build') {
             steps {
                 echo 'Building application'
@@ -12,12 +20,6 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing application'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploying application'
             }
         }
     }
