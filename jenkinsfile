@@ -2,25 +2,26 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Checkout Verification') {
+        stage('Build & Test') {
             steps {
-                echo 'Checking Jenkins workspace...'
-                sh 'pwd'
-                sh 'ls -la'
+                echo 'Running build processes...'
+                // If this step fails, the pipeline skips straight to the post section
+                sh 'make test' 
             }
         }
+    }
 
-        stage('Build') {
-            steps {
-                echo 'Building application'
-            }
+    /* The post section handles actions at the very end of the run */
+    post {
+        always {
+            echo 'The pipeline has completed, running final cleanup tasks...'
+            deleteDir() // Cleans up the workspace directory
         }
-
-        stage('Test') {
-            steps {
-                echo 'Testing application'
-            }
+        success {
+            echo 'The build was successful!'
+        }
+        failure {
+            echo 'The build failed. Investigating logs...'
         }
     }
 }
