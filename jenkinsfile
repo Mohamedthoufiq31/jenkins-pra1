@@ -2,26 +2,44 @@ pipeline {
     agent any
 
     stages {
-        stage('Build & Test') {
+
+        stage('Build') {
             steps {
-                echo 'Running build processes...'
-                // If this step fails, the pipeline skips straight to the post section
-                sh 'make test' 
+                echo '===== BUILD ====='
+                echo 'Building application'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo '===== TEST ====='
+                echo 'Testing application'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo '===== DEPLOY ====='
+                echo 'Deploying application'
             }
         }
     }
 
-    /* The post section handles actions at the very end of the run */
     post {
-        always {
-            echo 'The pipeline has completed, running final cleanup tasks...'
-            deleteDir() // Cleans up the workspace directory
-        }
+
         success {
-            echo 'The build was successful!'
+            echo '===== SUCCESS ====='
+            echo 'Application deployment successful'
         }
+
         failure {
-            echo 'The build failed. Investigating logs...'
+            echo '===== FAILURE ====='
+            echo 'Application deployment failed'
+        }
+
+        always {
+            echo '===== ALWAYS ====='
+            echo 'Pipeline execution completed'
         }
     }
 }
