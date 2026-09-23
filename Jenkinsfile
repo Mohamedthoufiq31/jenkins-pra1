@@ -2,10 +2,23 @@ pipeline {
 
     agent any
 
-    environment {
-        APP_NAME = 'myapp'
-        ENVIRONMENT = 'development'
-        TOMCAT_PORT = '9090'
+    parameters {
+
+        choice(
+            name: 'ENVIRONMENT',
+            choices: [
+                'development',
+                'testing',
+                'production'
+            ],
+            description: 'Select deployment environment'
+        )
+
+        booleanParam(
+            name: 'RUN_TESTS',
+            defaultValue: true,
+            description: 'Run tests?'
+        )
     }
 
     stages {
@@ -13,25 +26,57 @@ pipeline {
         stage('Build') {
             steps {
                 echo "===== BUILD ====="
-                echo "Application: ${APP_NAME}"
-                echo "Environment: ${ENVIRONMENT}"
+                echo "Building application"
             }
         }
 
         stage('Test') {
+
+            when {
+                expression {
+                    params.RUN_TESTS
+                }
+            }
+
             steps {
                 echo "===== TEST ====="
-                echo "Testing ${APP_NAME}"
+                echo "Running tests"
+            }
+        }
+
+        stage('Production Approval') {
+
+            when {
+                expression {
+                    params.ENVIRONMENT == 'production'
+                }
+            }
+
+            steps {
+                input message: 'Production deployment approved?'
             }
         }
 
         stage('Deploy') {
             steps {
                 echo "===== DEPLOY ====="
-                echo "Deploying ${APP_NAME}"
-                echo "Environment: ${ENVIRONMENT}"
-                echo "Tomcat Port: ${TOMCAT_PORT}"
+                echo "Deploying to ${params.ENVIRONMENT}"
             }
+        }
+    }
+
+    post {
+
+        success {
+            echo 'Pipeline completed successfully'
+        }
+
+        failure {
+            echo 'Pipeline failed'
+        }
+
+        always {
+            echo 'Pipeline finished'
         }
     }
 }
