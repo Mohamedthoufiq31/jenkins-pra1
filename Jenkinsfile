@@ -26,7 +26,7 @@ pipeline {
                     echo "Files:"
                     ls -la
 
-                    echo "Latest commit:"
+                    echo "Laaatest commit:"
                     git log -1 --oneline
                 '''
             }
