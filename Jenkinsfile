@@ -23,7 +23,7 @@ pipeline {
                     echo "Current directory:"
                     pwd
 
-                    echo "Files:"
+                    echo "Filez:"
                     ls -la
 
                     echo "Laztest commit:"
