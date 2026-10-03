@@ -6,40 +6,37 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                checkout scm
+                echo 'Repository checked out'
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Build started automatically!'
-                sh 'echo "Commit received from GitHub"'
+                echo 'Building application'
             }
         }
 
-        stage('Verify') {
+        stage('Test') {
             steps {
-                sh '''
-                    echo "Current directory:"
-                    pwd
+                echo 'Running tests'
+            }
+        }
 
-                    echo "Filez:"
-                    ls -la
-
-                    echo "Laztest commit:"
-                    git log -1 --oneline
-                '''
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application'
             }
         }
     }
 
     post {
+
         success {
-            echo 'Webhook build completed successfully!'
+            echo 'Pipeline completed successfully!'
         }
 
         failure {
-            echo 'Webhook build failed!'
+            echo 'Pipeline failed!'
         }
     }
 }
